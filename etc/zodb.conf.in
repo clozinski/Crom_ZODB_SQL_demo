@@ -1,0 +1,16 @@
+<zodb demo1>
+  <blobstorage>
+    blob-dir ${zodb_conf:blobdir}/demo1
+    <filestorage>
+      path ${zodb_conf:datadir}/demo1.fs
+    </filestorage>
+  </blobstorage>
+</zodb>
+<zodb demo2>
+  <blobstorage>
+    blob-dir ${zodb_conf:blobdir}/demo2
+    <filestorage>
+      path ${zodb_conf:datadir}/demo2.fs
+    </filestorage>
+  </blobstorage>
+</zodb>
