@@ -24,9 +24,10 @@ with Configuration('config.json') as config:
     # We initialize our Crom registry
     # Here, we would have to "grok" our packages.
     # We can do it with a zcml file or manually.
+    # We init it here, just to have the view lookup working.
     from crom import monkey, implicit
-    monkey.incompat()
-    implicit.initialize()
+    monkey.incompat()  # incompat means it changes the behavior of the iface
+    implicit.initialize()  # we create a new registry and make it the default
 
     # We read the zodb conf and initialize it
     from cromlech.zodb import init_db_from_file
@@ -36,7 +37,7 @@ with Configuration('config.json') as config:
     # Creating the applications and routing them
     from rutter import urlmap
     from cromdemo.wsgi import demo1, demo2
-    
+
     router = urlmap.URLMap()
     router['/demo1'] = demo1
     router['/demo2'] = demo2
@@ -45,4 +46,4 @@ with Configuration('config.json') as config:
     # It will create the ZODB connection object in the environ
     # at the given key
     from cromlech.zodb.middleware import ZODBApp
-    application = ZODBApp(router, db, key="zope.connection")
+    application = ZODBApp(router, db, key="zodb.connection")

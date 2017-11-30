@@ -15,7 +15,7 @@ Publisher = DawnlightPublisher(view_lookup=view_lookup)
 
 
 def demo1(environ, start_response):
-    conn = environ["zodb.connection"].root().get_connection('demo1')
+    conn = environ["zodb.connection"].get_connection('demo1')
     root = conn.root()
     request = Request(environ)
     response = Publisher.publish(request, root, handle_errors=True)
@@ -23,7 +23,7 @@ def demo1(environ, start_response):
 
 
 def demo2(environ, start_response):
-    conn = environ["zodb.connection"].root().get_connection('demo2')
+    conn = environ["zodb.connection"].get_connection('demo2')
     root = conn.root()
     request = Request(environ)
     response = Publisher.publish(request, root, handle_errors=True)
