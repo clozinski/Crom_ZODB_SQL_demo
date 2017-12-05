@@ -45,6 +45,10 @@ have a lot of extra adaptors, leading to unnecessary complexity.  Even
 Jim Fulton said something like: “We used way too many adaptors.”  And of
 course zeam.form can also be used with Grok or Plone.
 
+Cromlech has a very simple, yet powerful security and authentication  model.
+Before beginning traversal wrap the Publication class in an authentication
+decorator. Unauthenticated users will be challenged.  Wrap secure views with a
+security decorator. 
 
 Cromlech has a new component registry.
 While it is plug compatible with the old registry, it allows for chaining of
@@ -58,12 +62,19 @@ It gives you a much more flexible  approach than the grok approach.
 So why not just use Pyramid?  The reason that I like Grok or Cromlech is
 that they are rich environments.  They give you a lot of concepts to build
 on.  In contrast Pyramid is quite stripped down.  Optimized for computer speed,
-rather than ease of development.  In particular zope.securitypolish has not
+rather than ease of development. So Pyrmaid tossed out zope.security in foavor
+simplistic Access Control Lists.  Pyramid hides the component registry under
+a simpler api, and only uses it for view lookups. Pyramid does not include
+zope.interface and CRUD.  Choose your own forms libraries. 
+In particular the wonderfully expressive zope.securitypolish has not
 een ported to Pyramid.  Maybe it cannot be. 
 
-
-Pyramid is another bulky framework, whereas Cromlech is more a collection of
-separate tools.
+The other problem with Pyrmaid is that is that itt only works
+as a WSGI server, whereas Cromlech is more a collection of separate tools.
+Let us take a look at how to run Pyramid with Tornado.
+https://stackoverflow.com/questions/29496870/how-to-use-pyramid-with-tornado
+Whereas with Cromlech you can call app.py from a tornado process.  Now we just
+need to document how to do that.  But at least you can do it. 
 
 Martian Vs Venusian.
 Grok does configuration using martian.  Cromlech

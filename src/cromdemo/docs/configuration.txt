@@ -1,9 +1,16 @@
  How does cromlech work?
 
-The core is app.py.
+Cromlech is a set of tools which you can string together any way you want.
+
+The way that the demo strings them together is in a file called app.py. 
+
+App.py loads everything which is needed.  It bootstraps the application.
+
 
 You can call app.py from a WSGI server, from an Async server such as Tornado,
-or from the command line, maybe in a debugging session.  Maybe you would want to turn it into a script, to be calledby a cron job.  It is quite flexible. 
+or from the command line, maybe in a debugging session.  Maybe you would
+want to turn it into a script, to be calledby a cron job.  It is quite
+flexible. 
 
 The first thing app.py needs to do, is to know where to find everything.
 So it loads a config.json file with all of the Python Paths.
