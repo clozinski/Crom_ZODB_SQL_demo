@@ -1,43 +1,50 @@
 Cromlech ZODB Demo
 ========================
 
-There is also another richer
-[Demo](https://github.com/Cromlech/CromlechCromDemo)
-without the ZODB.
-
 Installation instructions are in [INSTALL.md](./INSTALL.md)
 
-Cromlech is a rewrite  of Grok, written by one of 
-the original Grok contributors, Souheil Chelfouh.  It is in daily
-production use in a big company in Germany, and in
-daily development use by its author Souheil.
 
-Why use Cromlech instead of Grok? There seeral reasons.  Cromlech is already
-ported to Python 3.  It uses Zeam instead of zope.formli and z3c.form.  It has
-a much cleaner implementation of security on views.  No more security proxies
-on objects.  Let us dig deeper into these issues. 
+Cromlech is a rewrite  of Grok.  Its author, Souheil Chelfouh,  was one of the original
+contributors to Grok, and he has taken the last 10 years to clean up Grok and disentangle
+the various pieces.  It shares the same concepts as Grok, but
+has a much clearner implementation.  It runs in both Python 3 and Python 2.  It is in daily production use in a big company in Germany, and in
+daily development use by its author Souheil. 
 
-For me the biggest reason is that cromlech
+How does Cromlech differ from Grok? Both are based on the ZTK. Both have obhect publishers.  Both use zope.security.  Both havea  component registry.  Both have security on views.  
+But Grok is really a massive framework, while Cromlech has done the miraculous job of
+separating out the different pieces into a toolkit.  With Grok you
+have to hae a ZODB.  You add applications.  Applications  have sites.  Sites have registries, and users.  There is a big complexity overhead required by Grok.
+
+Cromlech is more like a tool set.  Choose those pieces which you want.
+At first I did not believe it possible, but the more I dug, the more I realized
+it to be true.  Cromlech does not even require a ZODB, It can use one or
+more root ZODB's. it can use dispatch, it can use traversal, it can dispatch,
+and then traverse.   Cromlech can run as a WSGI server, a stand alone app, or a
+async (such as Tornado) server.  Awesome. 
+Like ZTK Cromlech is a toolset.  But it also has two demos you
+can start with. 
+
+For me the biggest reason is that Cromlech
 is already running in Python 3, while Grok has some
-15-24 packages which need to be ported.  
+15-24 packages which need to be ported.   
 
 The other reason is that we are now much smarter than when grok was written.
-zope.formlib and z3c.form had way way too many adapters.  Zeam.form is much
-better designed.   Grok is really tied in with the a single root ZODB, Cromlech
-can optionally use one or more ZODBs. Cromlech can also do traversal or
-dispatch.  In my case I intend to do the simple thing, and just have a
-single ZODB app using traversal.
+zope.formlib and z3c.form had way way too many adapters.  Cromlech uses Zeam.form
+which is much better designed.
 
-How does Cromlech differ from Grok?   Both are based on the ZTK.
-The big difference is that Cromlech uses the more modern WebOb,
-while grok/zope are still using the older zope.pulisher.
-(Did I get that right?????).
+Cromlech uses the more modern WebOb,
+while grok/zope are still using the older zope.publisher.
+If you take a look at the Zope.publisher source code, it does everything.  Way too complex to understand, let alone hack.  And zope.publisher calles zope.app.publisher.publication.
+Cromlech is much simpler, cleaner readable and understandable.
 
 The next big difference is  in the security model.  The
 modern way to do security is security on views.
 ZTK also does security on object access.
 So Grok has to patch that leading to a lot of additional complexity.
 Cromlech takes the simpler approach of directly downg security on views.
+During traversal, you can optionally add in security on object access.
+Cromlech got that one right.
+
 
 Cromlech uses Zeam.form, while Grok uses
 zope.formlib and Z3c.form.  The problem with the later two is that they
@@ -48,33 +55,17 @@ course zeam.form can also be used with Grok or Plone.
 Cromlech has a very simple, yet powerful security and authentication  model.
 Before beginning traversal wrap the Publication class in an authentication
 decorator. Unauthenticated users will be challenged.  Wrap secure views with a
-security decorator. 
+security decorator.  
 
 Cromlech has a new component registry.
 While it is plug compatible with the old registry, it allows for chaining of
-registries.  Think a tree of registries.
+registries.  Think a tree of registries. In contrast Grok has both local and
+global registeries.  The Cromlech approach makes more sense.
 
 Cromlech startup is a bit different than Grok.  Grok just had one way to
 start up.  Cromlech has an app.py file which configures your startup.
 It gives you a much more flexible  approach than the grok approach. 
 
-
-So why not just use Pyramid?  The reason that I like Grok or Cromlech is
-that they are rich environments.  They give you a lot of concepts to build
-on.  In contrast Pyramid is quite stripped down.  Optimized for computer speed,
-rather than ease of development. So Pyrmaid tossed out zope.security in foavor
-simplistic Access Control Lists.  Pyramid hides the component registry under
-a simpler api, and only uses it for view lookups. Pyramid does not include
-zope.interface and CRUD.  Choose your own forms libraries. 
-In particular the wonderfully expressive zope.securitypolish has not
-een ported to Pyramid.  Maybe it cannot be. 
-
-The other problem with Pyrmaid is that is that itt only works
-as a WSGI server, whereas Cromlech is more a collection of separate tools.
-Let us take a look at how to run Pyramid with Tornado.
-https://stackoverflow.com/questions/29496870/how-to-use-pyramid-with-tornado
-Whereas with Cromlech you can call app.py from a tornado process.  Now we just
-need to document how to do that.  But at least you can do it. 
 
 Martian Vs Venusian.
 Grok does configuration using martian.  Cromlech
@@ -110,11 +101,45 @@ For those who do prefer Martian, the good news is that it is already running on
 Python 3.  But there are many special grokkers in Grok, and reportedly as of 
 middle 2017, not all of them work  with Martian on Python 3. 
 
-
-As for Grok?  Cromlech is built on top of the ZTK, so mostly they should be 
-compatible.  Once I figure out the Cromlech libraries, it should not be that 
+It should e reasonably doable to port Grok Model Objects and views to Cromlech. 
+Once I figure out the Cromlech libraries, it should not be that 
 hard to port a Grok application over.  My hope is that porting a Grok 
 application to Cromlech will only require upgrading a few grok packages to 
 Python 3.  Time will tell. 
 
+So why not just use Pyramid?  The reason that I like Grok or Cromlech is
+that they are rich environments.  They give you a lot of concepts to build
+on.  In contrast Pyramid is quite stripped down.  Optimized for computer speed,
+rather than ease of development. So Pyrmaid tossed out zope.security in foavor
+simplistic Access Control Lists.  Pyramid hides the component registry under
+a simpler api, and only uses it for view lookups. Pyramid does not include
+zope.interface and CRUD.  Choose your own forms libraries. 
+In particular the wonderfully expressive zope.securitypolish has not
+een ported to Pyramid.  Maybe it cannot be because Pyramid does nto use zope.security.
+
+The other problem with Pyrmaid is that is that itt only works
+as a WSGI server, whereas Cromlech is more a collection of separate tools.
+Let us take a look at the limitations of running Pyramid with Tornado.  Reportedly
+you can only run Pyramid as a single thread.
+https://stackoverflow.com/questions/29496870/how-to-use-pyramid-with-tornado
+Whereas with Cromlech you can call app.py from a tornado process.
+
+Is Cromlech perfect?  Well no.  The biggest prolem is the lack of documentations. 
+The author has put his focus on the code.  So I am busy writing documentation. If
+you are a grok or zope developer, then you understand the basic concepts. There 
+is enough documentation here to get you oriented and started.  And if you have any
+questions, the tech support is just brilliant.  Not only are the text answers
+on the irc freenode channel #dolmen excellent, but whenever I have run into a problem
+the author getes me a new release the next day, often staying up late to do so. 
+
+This is not just some open source library someone drafted.  This represents a world
+view of how software should be done.  Our professional identiies are tied up 
+with this work.  Very much a labor of love.  Those of us who are working on this 
+software really care about it, and want you to have a good experience.  We invite 
+you to try it out.  Just be nice in your feedback. 
+
 There are additional docs [here](./src/cromdemo/docs).
+
+There is also another richer
+[Demo](https://github.com/Cromlech/CromlechCromDemo)
+without the ZODB.
